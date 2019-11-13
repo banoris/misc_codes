@@ -15,8 +15,17 @@ struct MyClass {
 	}
 
 	MyClass(int x) {
-		printf("Ctor for MyClass with int x=%d\n", x);
+		member_x = x;
+		printf("Ctor for MyClass with member_x=%d\n", member_x);
 	}
+
+	// initializer list
+	MyClass(int x, int y) : member_x{ x }, member_y{ y } {
+		printf("MyClass Ctor initializer_list. member_x=%d, member_y=%d\n", x, y);
+	}
+
+	int member_x;
+	int member_y;
 
 };
 
@@ -65,8 +74,15 @@ int main(int argc, char const *argv[])
 	MyClass mc6();
 
 	/* Moral of the story: braces init almost always the right choice
-	 * Plot twist: there are some exceptions -__-
+	 * Plot twist: as always, there are some exceptions. E.g. in the
+	 *   stdlib -__-
 	 */
+
+
+	// Initializer list
+	MyClass mc7{19, 93};
+	std::cout << "member_x=" << mc7.member_x << ", member_y=" << mc7.member_y << std::endl;
+
 
 	return 0;
 }
