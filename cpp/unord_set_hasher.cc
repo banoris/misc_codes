@@ -23,6 +23,7 @@ struct StrHashByLength {
 // Custom Comparator function
 struct StrCompareByLength {
 	// Recall const args vs const member function
+	// TODO: This is weird. Isn't it comparator operator== ?
 	bool operator()(const string &lhs, const string &rhs) const {
 		if (lhs.length() == rhs.length())
 			return true;
@@ -35,7 +36,8 @@ int main(int argc, char const *argv[])
 {
 	// NOTE: notice the ordering. Spent quite some time debugging just because
 	//   you put hasher arg as the 3rd args to the template (╯°□°）╯︵ ┻━┻)
-	//   C++ template compile is super cryptic and magical, defeating Perl
+	//   C++ template compile error is super cryptic and magical, defeating Perl
+	//   Recipe: unordered_set<_type_, _hash-func_, _comparator_>
 	unordered_set<string, StrHashByLength, StrCompareByLength> setOfStrs;
 
 	setOfStrs.insert("First");
