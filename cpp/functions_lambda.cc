@@ -5,6 +5,11 @@
 #include <functional>
 
 /*
+https://stackoverflow.com/questions/7627098/what-is-a-lambda-expression-in-c11
+    - good overview with examples and motivation
+ */
+
+/*
 In English: tranform() is a template function that receives
 a function object, Fn, that will map in[i] -> Fn operation -> out[i]
 Like math: f(x) = 2x
@@ -71,6 +76,22 @@ int main(int argc, char const *argv[])
         printf("i=%d: out1[i]=%d, out2[i]=%d, out3[i]=%d\n",
             i, out1[i], out2[i], out3[i]);
     }
+
+    /******************** Example 3 ********************/
+    /**
+     * Lambda with capture
+     */
+    std::string str{"Helloooo test string "};
+
+    // NOTE: notice the <void(int)>. Careful with function signature.
+    //   In this case, the ret type is void with one arg of type int.
+    //   Or use auto. If compiler can't infer lambda ret type, you
+    //   can explicitly specify ret type. Refer cppref
+    // NOTE: You can control how you capture the 'outside' variables.
+    //   Either by ref, copy, or mix-n-match
+    //   Don't confuse capture clause with input. [CAPTURE] (INPUT) {BODY}
+    std::function<void(int)> lambda_capture{ [&](int num) {std::cout << str << num << '\n';} };
+    lambda_capture(12345);
 
     return 0;
 }
