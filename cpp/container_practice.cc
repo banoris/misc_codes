@@ -8,9 +8,11 @@
 
 #include <unordered_set>
 #include <algorithm>
+#include <queue>
 
 using namespace std;
 
+void queue_container();
 int main(int argc, char const *argv[])
 {
     hash<long> hasher_long;
@@ -128,6 +130,71 @@ int main(int argc, char const *argv[])
         }
     }
 
+    queue_container();
 
     return 0;
+struct myObject {
+    int intField;
+    string strField = "Default";
+
+    // Ctor
+    myObject(int in_int, string in_str = "Default")
+                : intField(in_int), strField(in_str) {
+        cout << "myObject Ctor: intField=" << in_int <<
+            " strField=" << in_str << "\n";
+    }
+
+    // Why only one arg? Because we define inside of class/struct
+    // NOTE: you missed the 2nd 'const' causing compile error when
+    //   inserting to std::set. Of course the error is super cryptic
+    bool operator<(const myObject& rhs) const {
+        return intField < rhs.intField;
+    }
+
+    // Dtor
+    ~myObject() {
+        cout << "myObject Dtor: intField=" << intField <<
+        " strField=" << strField << "\n";;
+    }
+};
+
+void queue_container() {
+    cout << "\n===== BEGIN Qeueu Practice ====\n\n";
+
+    // NOTE: From Ctor/Dtor print, lots of object copying around
+    //   Not the case for heap allocated where only single Ctor/Dtor pair printed
+    myObject obj1{1};
+    myObject obj2{2};
+    myObject obj3{3};
+
+    queue<myObject> obj_q;
+    obj_q.push(obj1);
+    obj_q.push(obj3); // note the ordering, will impact q.front()
+    obj_q.push(obj2);
+
+    // while queue is not empty, cont processing
+    while(!obj_q.empty()) {
+        myObject obj = obj_q.front();
+        cout << "intField=" << obj.intField << "\n";
+        obj_q.pop();
+    }
+
+    myObject* obj_heap1 = new myObject(11);
+    myObject* obj_heap2 = new myObject(22);
+    queue<myObject*> obj_q_heap;
+
+    obj_q_heap.push(obj_heap1);
+    obj_q_heap.push(obj_heap2);
+
+    while(!obj_q_heap.empty()) {
+        myObject* obj = obj_q_heap.front();
+        cout << "Heap: intField=" << obj->intField << "\n";
+        obj_q_heap.pop();
+    }
+
+    delete obj_heap1;
+    delete obj_heap2;
+    cout << "\n===== END Qeueu Practice ====\n\n";
+}
+
 }
