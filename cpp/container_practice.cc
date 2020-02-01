@@ -9,10 +9,12 @@
 #include <unordered_set>
 #include <algorithm>
 #include <queue>
+#include <set>
 
 using namespace std;
 
 void queue_container();
+void set_container();
 int main(int argc, char const *argv[])
 {
     hash<long> hasher_long;
@@ -131,8 +133,11 @@ int main(int argc, char const *argv[])
     }
 
     queue_container();
+    set_container();
 
     return 0;
+}
+
 struct myObject {
     int intField;
     string strField = "Default";
@@ -196,5 +201,45 @@ void queue_container() {
     delete obj_heap2;
     cout << "\n===== END Qeueu Practice ====\n\n";
 }
+
+struct DescendCompare {
+    bool operator() (const myObject& lhs, const myObject& rhs) {
+        return lhs.intField > rhs.intField;
+    }
+};
+
+// std::set ordering using functor operator() vs operator<
+void set_container() {
+    cout << "\n===== BEGIN Set Practice ====\n\n";
+
+    set<myObject> myset;
+    myObject obj1{11};
+    myObject obj2{22};
+    myObject obj3{33};
+
+    // Notice the ordering, let's test whether our operator< works
+    // We insert obj3=33 as the 1st object but it will get printed last
+    // std::set is ordered, don't confuse with unordered_map
+    myset.insert(obj3);
+    myset.insert(obj1);
+    myset.insert(obj2);
+
+    cout << "Test set ordering with custom operator<. Ascending order" << "\n";
+    for (auto const& obj : myset) {
+        cout << "   intField=" << obj.intField << "\n"; // 11, 22, 33
+    }
+
+    cout << "Test set ordering with custom operator(). Descending order" << "\n";
+    // notice the 2nd arg
+    set<myObject, DescendCompare> myset_descend;
+    myset_descend.insert(obj2);
+    myset_descend.insert(obj1);
+    myset_descend.insert(obj3);
+
+    for (auto const& obj : myset_descend) {
+        cout << "   intField=" << obj.intField << "\n"; // 33, 22, 11
+    }
+
+    cout << "\n===== END Set Practice ====\n\n";
 
 }
