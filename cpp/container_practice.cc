@@ -7,6 +7,8 @@
 #include <cassert>
 
 #include <unordered_set>
+#include <unordered_map>
+#include <list>
 #include <algorithm>
 #include <queue>
 #include <set>
@@ -15,6 +17,7 @@ using namespace std;
 
 void queue_container();
 void set_container();
+
 int main(int argc, char const *argv[])
 {
     hash<long> hasher_long;
@@ -62,7 +65,7 @@ int main(int argc, char const *argv[])
     // Create an unordered set and initialize it initializer_list
     //   TODO: study initializer_list (╯°□°）╯︵ ┻━┻)
     //     - Do we need to init with parentheses + braces? It works if remove '()'
-    //       - Yup, removed '()' and everything seems to work fine
+    //       Yup, removed '()' and everything seems to work fine
     unordered_set<int> setOfNum2( { 1, 2, 3, 1, 3, 4, 2 });
     unordered_set<int> my_setOfNum2{ 1, 2, 3, 1, 3, 4, 2 };
 
@@ -125,12 +128,77 @@ int main(int argc, char const *argv[])
     // Using auto compared to above forloop
     // 'const' means you cannot modify the content of the pointer
     // Try change and you will face compile error
-    // If you remove 'const', then you can modify
+    // If you remove both 'const', then you can modify
     for (const auto& pstr : string_2d) {
         for (const auto& str : pstr) {
+            // str = "hello"; // compile error because of const
             cout << str << endl;
         }
     }
+
+    // ------------------------------------------------- //
+    // unordered_map practice                            //
+    // ------------------------------------------------- //
+
+    unordered_map<string, int> wordToInt;
+    wordToInt.insert({"First", 1});
+    // Can use this syntax as well. Relate with Python dictionary
+    wordToInt["Second"] = 2;
+    wordToInt.insert({"Third", 3});
+
+    // foreach loop, each elem is std::pair, key=elem.first, value=elem.second
+    for (pair<string, int> element : wordToInt) {
+        cout << element.first << ": " << element.second << endl;
+    }
+
+    cout << "===== Iterator unordered_map ====" << endl;
+
+    //NOTE: the iterator is pair<type T1, type T2>
+    //  Relate with Python dictionary: dict = {'mykey': 123}
+    //    key is 'mykey', value is integer 123
+    //  In C++, 'key' is it->first, value is it->second
+    for (auto it = begin(wordToInt); it != end(wordToInt); it++) {
+        cout << it->first << ": " << it->second << endl;
+    }
+
+    // ------------------------------------------------- //
+    // list practice                                     //
+    // ------------------------------------------------- //
+
+    cout << "===== list<> practice ====" << endl;
+
+    list<int> myList{1, 2, 3, 4};
+    const list<int>::iterator& myList_begin = myList.begin();
+
+    cout << "myList_begin = " << *myList_begin << endl; // 1
+
+    myList.emplace_front(123);
+    cout << "Still 1: myList_begin = " << *myList_begin << endl; // still 1
+    myList.erase(myList_begin);
+    cout << "After list.erase(myList_begin), myList_begin = " << *myList_begin << endl; //
+
+    for (int const &i : myList) {
+        cout << i << ", ";
+    }
+    cout << endl;
+
+    cout << *(myList.begin()) << endl;
+
+    myList.emplace_front(111);
+    cout << "After emplace_front(111), myList_begin = " << *myList_begin << endl; // HUH???
+    cout << *(myList.begin()) << endl;
+
+    // https://stackoverflow.com/questions/17016175/c-unordered-map-using-a-custom-class-type-as-the-key
+    // uo_map with custom hash
+    typedef unordered_map<int, pair<list<int>::iterator, int>> Table;
+    list<int> lru_queue_;
+
+    lru_queue_.emplace_front(97801);
+    cout << *(lru_queue_.begin()) << endl;
+
+    Table myTable;
+    myTable[97801] = {lru_queue_.begin(), 20};
+    const Table::iterator& it = myTable.find(97801);
 
     queue_container();
     set_container();
