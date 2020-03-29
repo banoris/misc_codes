@@ -1,4 +1,5 @@
 from operator import itemgetter
+import functools
 
 array = [1, 2, 3, "hello"]
 for i in array:
@@ -123,3 +124,47 @@ for cell in table:
 for cell in table:
 	print("id={}, entry={}".format(cell['id'], cell['entry']))
 
+
+print("=======================================================")
+print("Sort array using custom comparator")
+
+def mysorter(elem1, elem2):
+	if elem1['id'] > elem2['id']:
+		return 1
+	elif elem1['id'] == elem2['id']:
+		if elem1['sender_id'] >= elem2['sender_id']:
+			return -1
+		else:
+			return 1
+	else:
+		return -1
+
+# if 'id' are the same, then sort by 'sender_id'
+table = [{'id': 1, 'sender_id': 1, 'entry': "entry1"},
+		{'id': 4, 'sender_id': 2, 'entry': "entry4"},
+		{'id': 3, 'sender_id': 1, 'entry': "entry3_1"},
+		{'id': 3, 'sender_id': 2, 'entry': "entry3_2"},
+		{'id': 3, 'sender_id': 3, 'entry': "entry3_3"},
+		{'id': 2, 'sender_id': 4, 'entry': "entry2"}]
+
+print("Before sort")
+for entry in table:
+	print(str(entry))
+
+
+print("After sort")
+
+table = sorted(table, key=functools.cmp_to_key(mysorter))
+for entry in table:
+	print(str(entry))
+
+print("Testing list comprehension")
+table = [entry for entry in table if not (entry['id'] == 3 and entry['sender_id'] == 1)]
+
+for entry in table:
+	print(str(entry))
+
+if 0 > 3:
+	print("WTH 0 > 3??")
+else:
+	print("Cool, that works")
