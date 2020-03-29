@@ -23,7 +23,7 @@ struct StrHashByLength {
 // Custom Comparator function
 struct StrCompareByLength {
 	// Recall const args vs const member function
-	// TODO: This is weird. Isn't it comparator operator== ?
+	// TODO: This is weird. Shouldn't it be comparator operator== ?
 	bool operator()(const string &lhs, const string &rhs) const {
 		if (lhs.length() == rhs.length())
 			return true;
