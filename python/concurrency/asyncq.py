@@ -42,6 +42,11 @@ async def main(nprod: int, ncon: int):
     q = asyncio.Queue()
     producers = [asyncio.create_task(produce(n, q)) for n in range(nprod)]
     consumers = [asyncio.create_task(consume(n, q)) for n in range(ncon)]
+
+    # How does consumers (list of consume() coroutines) run if only
+    # *producer is passed to gather?
+    # No, you got confused. create_task(coro) wraps coro into a Task AND schedule its
+    #   exec. So create AND schedule task. Yup, the API name is somewhat lacked
     await asyncio.gather(*producers)
 
     # block main thread to wait until all items in the queue are processed
