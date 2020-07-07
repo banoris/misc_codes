@@ -8,9 +8,9 @@ async def printhello(input):
 async def main(input=None):
     print('Hello', input)
     await asyncio.sleep(1)
-    print('... World!')
+    print('... World', input)
     await asyncio.sleep(1)
-    print('... World2!')
+    print('... World2', input)
 
 async def main2(input=None):
     # looks asynchronous but it's actually not
@@ -26,9 +26,19 @@ async def main2(input=None):
     # _GatheringFuture exception was never retrieved
     # future: <_GatheringFuture finished exception=CancelledError()>
     # concurrent.futures._base.CancelledError
-    await asyncio.gather(printhello("1"), printhello("2"))
+    await asyncio.gather(printhello(input), printhello(input))
 
-asyncio.run(main2())
+async def main3(input=None):
+    aws = [main2("coro1"), main2("coro2"), main2("coro3")]
+    # NOTE: don't forget 'await' keyword in front of gather!!!
+    # https://docs.python.org/3/library/asyncio-api-index.html
+    #   .run():    create EventLoop, run the passed coroutine, and close loop
+    #   .gather(): schedule coroutine(s) concurrently and wait for them to finish
+    await asyncio.gather(*aws)
+    #print("done main3", aws)
+
+asyncio.run(main3())
+print("done!")
 
 # SyntaxError: 'await' outside async function
 #def top_func():
@@ -43,3 +53,4 @@ asyncio.run(main2())
 #await main("1")
 
 
+#asyncio.run(main2())
