@@ -31,6 +31,13 @@ async def main_concurrent():
 
     # Wait until both tasks are completed (should take
     # around 2 seconds.)
+    # NOTE: what happen if you don't have await here? Does task1 and task2 run?
+    #   Nope, this main_concurrent just terminates
+    # NOTE: What happen if you put asyncio.sleep instead of await task1? Tricky question...
+    #   create_task *schedule* the coro to run, but the coro won't run if this main doesn't
+    #   preempt itself. Remember, in cooperative scheduling, you yourself are responsible
+    #   to give up your cpu timeslice so that others can use the cpu. E.g., you block on
+    #   something, then the EventLoop takes away the cpu from you and give it to other coro
     await task1
     await task2
     # What happen when you await the same Task Object? Does it run again?
