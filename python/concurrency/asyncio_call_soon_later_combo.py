@@ -26,7 +26,7 @@ finally:
 
 
 ###########################
-# python 3.8 using run()
+# python 3.8 using just asyncio.run()
 ###########################
 
 # Why we don't need loop.close()?

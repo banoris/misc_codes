@@ -20,6 +20,17 @@ async def main_not_concurrent():
 
     print(f"finished at {time.strftime('%X')}")
 
+# NOTE: weird... not expecting it to take 2secs from reading this guy's blog
+# https://whatisjasongoldstein.com/writing/im-too-stupid-for-asyncio
+def sync_all():
+    print(f"started at {time.strftime('%X')}")
+
+    loop = asyncio.get_event_loop()
+    tasks = [say_after(1, 'hello'), say_after(2, 'world')]
+    loop.run_until_complete(asyncio.gather(*tasks))
+    loop.close()
+    print(f"finished at {time.strftime('%X')}")
+
 async def main_concurrent():
     task1 = asyncio.create_task(
         say_after(1, 'hello'))
@@ -52,6 +63,21 @@ async def main_concurrent():
 
     print(f"finished at {time.strftime('%X')}")
 
+
+# NOTE: refer example 2 from this guy blog
+# https://whatisjasongoldstein.com/writing/im-too-stupid-for-asyncio
+# He used run_until_complete and said it's not concurrent. Does using asyncio.run()
+# differs?
+async def main_concurrent2():
+    print(f"started at {time.strftime('%X')}")
+
+    tasks = [say_after(1, 'hello'), say_after(2, 'world')]
+
+    await asyncio.gather(*tasks)
+
+    print(f"finished at {time.strftime('%X')}")
+
+
 async def main_concurrent_with_ret():
     task1 = asyncio.create_task(
         get_val_after(1, 'hello'))
@@ -63,8 +89,7 @@ async def main_concurrent_with_ret():
 
     # Does this concurrent as well? YES! Still takes 2 secs
     tasks = [task1, task2]
-    print("task1=", task1)
-    print("get_val_after()=", get_val_after(1, "test"))
+    print("task1 = ", task1)
     ret1, ret2 = await asyncio.gather(*tasks)
     print("retval =", ret1, ret2)
 
@@ -78,6 +103,11 @@ async def main_concurrent_with_ret():
 #       finished at 16:58:39
 #asyncio.run(main_not_concurrent())
 
+# NOTE: why is this still takes 2 seconds?
+# This guy https://whatisjasongoldstein.com/writing/im-too-stupid-for-asyncio said
+# it is not concurrent?
+#sync_all()
+
 # Using Task Object. From output below, is it concurrent? Yes!
 # Only takes 2secs to complete
 #     started at 17:03:28
@@ -86,10 +116,10 @@ async def main_concurrent_with_ret():
 #     finished at 17:03:30
 # Tl;dr -- await <TaskObject> is concurrent
 #       -- await <coroutine>  is NOT concurrent
-asyncio.run(main_concurrent())
+#asyncio.run(main_concurrent())
 
 
 
 # NOTE: another example with return value
-#asyncio.run(main_concurrent_with_ret())
+asyncio.run(main_concurrent_with_ret())
 
