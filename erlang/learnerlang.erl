@@ -1,4 +1,6 @@
 
+% https://learnxinyminutes.com/docs/erlang/
+
 % Percent sign starts a one-line comment.
 
 %% Two percent characters shall be used to comment functions.
@@ -260,6 +262,9 @@ catcher(N) -> catch generate_exception(N).
 %% 4. Concurrency
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Watch this youtube playlist for more on Erlang concurrency
+% https://www.youtube.com/watch?v=NqJAseAuAxM&list=PLoFxPv8jwGVVlajiMxaW9zG1IZgHODTuq&index=6
+
 % Erlang relies on the actor model for concurrency. All we need to write
 % concurrent programs in Erlang are three primitives: spawning processes,
 % sending messages and receiving messages.
@@ -277,6 +282,7 @@ spawn(F). % <0.44.0>
 
 -module(calculateGeometry).
 -compile(export_all).
+% Golang sort of follows this style
 calculateArea() ->
     receive
       {rectangle, W, H} ->
@@ -290,6 +296,8 @@ calculateArea() ->
 % Compile the module and create a process that evaluates `calculateArea` in the
 % shell.
 c(calculateGeometry).
+% syntax: spawn(ModuleName, FuncName, Arg)
+%         spawn(fun() -> .... end)  % using lambda
 CalculateArea = spawn(calculateGeometry, calculateArea, []).
 CalculateArea ! {circle, 2}. % 12.56000000000000049738
 
