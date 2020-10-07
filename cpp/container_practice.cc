@@ -161,6 +161,13 @@ int main(int argc, char const *argv[])
         cout << it->first << ": " << it->second << endl;
     }
 
+    // Init map with some key/val
+    unordered_map<int, int> hmap({{0, 11}, {1, 22}, {2, 33}});
+
+    for(const auto& kv : hmap) {
+        cout << "Key: [" << kv.first << "], Value: [" << kv.second << "]\n";
+    }
+
     // ------------------------------------------------- //
     // list practice                                     //
     // ------------------------------------------------- //
