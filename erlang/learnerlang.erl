@@ -330,11 +330,48 @@ fib_test_() ->
 
 % EUnit will automatically export to a test() function to allow running the tests
 % in the erlang shell
-fib:test()
+fib:test().
 
 % The popular erlang build tool Rebar is also compatible with EUnit
 % 
 % rebar eunit
 % 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 6. My cheatsheet
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+process_info(Pid, messages). % print messages in Pid's mailbox
+
+flush(). % empty current process mailbox
+registered(). % print all registered processes in shell
+
+regs(). % Better, shows registered procs with its atom name
+
+% register some_atom to Pid
+% Analogy: think of DNS, where atom is the domain name, and Pid is the IP address
+% some_atom ! {msg, Data} -- sending message to some_atom domain name
+register(some_atom, Pid).
+
+%%%%% Exception %%%%%
+% NOTE the behavior of evaluating exit
+% 5> catch exit(error_atom).
+% {'EXIT', error_atom}
+% 15> catch throw({error_atom, 123}).
+% {error_atom,123}
+% 16> catch throw(error_atom).
+% error_atom
+% 23> catch exit("Timeout").
+% {'EXIT',"Timeout"}
+
+%%% Test lists:all %%%
+AllOk = fun(X) -> X =:= ok end.
+  Results = [ok, ok, ok].
+  lists:all(AllOk, Results).
+  true.
+
+  Results2 = [ok, {'Exit', Reason}, ok]
+  lists:all(AllOk, Results2).
+  false.
+
 
 
