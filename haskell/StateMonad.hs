@@ -1,0 +1,48 @@
+module StateGame where
+
+import Control.Monad.State
+
+-- https://wiki.haskell.org/State_Monad
+-- Example use of State monad
+-- Passes a string of dictionary {a,b,c}
+-- Game is to produce a number from the string.
+-- By default the game is off, a C toggles the
+-- game on and off. A 'a' gives +1 and a b gives -1.
+-- E.g 
+-- 'ab'    = 0
+-- 'ca'    = 1
+-- 'cabca' = 0
+-- State = game is on or off & current score
+--       = (Bool, Int)
+
+-- Why GameValue, the result of State.Monad is type Int?
+-- What if you change it to String? You can, but when You
+-- return, need to return a String instead of Int
+type GameValue = Int
+type GameState = (Bool, Int)
+
+playGame :: String -> State GameState GameValue
+playGame []     = do
+    (_, score) <- get
+    -- TODO: Can compile but doesn't work...
+    unless (score < 10) $ error "Score too low"
+    unless (score > 10) $ error "Score too low"
+    return score
+    -- return $ show score
+playGame (x:xs) = do
+    (on, score) <- get
+    case x of
+         'a' | on -> put (on, score + 1)
+         'b' | on -> put (on, score - 1)
+         'c'      -> put (not on, score)
+         _        -> put (on, score)
+    playGame xs
+
+startState = (False, 0)
+in0 = "abcaaacbbcabbab"
+in1 = "cacca"
+in2 = "caca"
+in3 = "caaaaa"
+
+main = print $ evalState (playGame in3) startState
+
