@@ -36,6 +36,9 @@ rev' = (5:(4:(3:(2:(1:[])))))
 -- it is left fold? Think about typical forloop in imperative lang
 -- Most of the time you operate on the first elem to last elem
 
+-- fold without base case
 
+a1 = foldl (-) 0 [1,2,3] -- 0 - 1 - 2 - 3 = -6
+a2 = foldl1 (-) [1,2,3]  -- 1 - 2 - 3     = -4
 
 ----- END Folding Practice -----

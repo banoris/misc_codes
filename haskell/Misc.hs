@@ -13,6 +13,10 @@ rev [] = []
 rev (x:xs) = rev xs ++ [x]
 -- rev (x:xs) = (rev xs) : x -- COMPILE ERROR
 
+-- * concatMap example
+s1 = concat $ map (\s -> map toUpper s) ["hello", "world"]
+s2 = concatMap (\s -> map toUpper s) ["hello", "world"]
+
 fib :: Int -> Int
 fib 0 = 0
 fib 1 = 1
